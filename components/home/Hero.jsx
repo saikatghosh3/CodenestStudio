@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { ArrowRight, Sparkles, Terminal, Activity, Zap, CheckCircle2, Play, Code2, Layers, Cpu, Globe } from "lucide-react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 
 const TypewriterText = ({ text }) => {
   const [displayedText, setDisplayedText] = useState("");
@@ -33,20 +33,25 @@ export default function Hero() {
   const containerRef = useRef(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const rafRef = useRef(null);
 
-  const handleMouseMove = (e) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    mouseX.set(x / 40);
-    mouseY.set(y / 40);
-  };
+  const handleMouseMove = useCallback((e) => {
+    if (rafRef.current) return;
+    rafRef.current = requestAnimationFrame(() => {
+      if (!containerRef.current) { rafRef.current = null; return; }
+      const rect = containerRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      mouseX.set(x / 40);
+      mouseY.set(y / 40);
+      rafRef.current = null;
+    });
+  }, [mouseX, mouseY]);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     mouseX.set(0);
     mouseY.set(0);
-  };
+  }, [mouseX, mouseY]);
 
   const rotateX = useTransform(mouseY, (val) => -val);
   const rotateY = useTransform(mouseX, (val) => val);
@@ -59,17 +64,9 @@ export default function Hero() {
       onMouseLeave={handleMouseLeave}
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 pb-16 lg:pt-40 lg:pb-24 bg-background transition-colors duration-500"
     >
-      <div className="absolute inset-0 z-0">
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[20%] left-[20%] h-[40vw] w-[40vw] rounded-full bg-primary/20 blur-[100px]"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute bottom-[10%] right-[10%] h-[35vw] w-[35vw] rounded-full bg-blue-600/20 blur-[100px]"
-        />
+      <div className="absolute inset-0 z-0 contain-layout">
+        <div className="absolute top-[20%] left-[20%] h-[40vw] w-[40vw] rounded-full bg-primary/20 blur-[100px] animate-hero-blob-1" />
+        <div className="absolute bottom-[10%] right-[10%] h-[35vw] w-[35vw] rounded-full bg-blue-600/20 blur-[100px] animate-hero-blob-2" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -227,11 +224,7 @@ export default function Hero() {
               </div>
 
               {/* Floating Element 1 */}
-              <motion.div
-                animate={{ y: [-10, 10, -10] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-6 -left-3 lg:-top-10 lg:-left-10 bg-card/80 backdrop-blur-xl border border-border p-2 lg:p-4 rounded-2xl shadow-xl flex items-center gap-2 lg:gap-4 translate-z-50 transition-colors duration-300"
-              >
+              <div className="absolute -top-6 -left-3 lg:-top-10 lg:-left-10 bg-card/80 backdrop-blur-xl border border-border p-2 lg:p-4 rounded-2xl shadow-xl flex items-center gap-2 lg:gap-4 translate-z-50 transition-colors duration-300 animate-float-y">
                 <div className="w-8 h-8 lg:w-12 lg:h-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary">
                   <Zap className="w-4 h-4 lg:w-6 lg:h-6" />
                 </div>
@@ -239,14 +232,10 @@ export default function Hero() {
                   <p className="text-sm lg:text-base text-foreground font-bold transition-colors duration-300">100/100</p>
                   <p className="text-xs text-muted-foreground transition-colors duration-300">Performance Score</p>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Floating Element 2 */}
-              <motion.div
-                animate={{ y: [10, -10, 10] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -bottom-6 -right-3 lg:-bottom-10 lg:-right-10 bg-card/80 backdrop-blur-xl border border-border p-2 lg:p-4 rounded-2xl shadow-xl flex items-center gap-2 lg:gap-4 translate-z-50 transition-colors duration-300"
-              >
+              <div className="absolute -bottom-6 -right-3 lg:-bottom-10 lg:-right-10 bg-card/80 backdrop-blur-xl border border-border p-2 lg:p-4 rounded-2xl shadow-xl flex items-center gap-2 lg:gap-4 translate-z-50 transition-colors duration-300 animate-float-y-reverse">
                 <div className="w-8 h-8 lg:w-12 lg:h-12 rounded-full bg-green-500/10 dark:bg-green-500/20 flex items-center justify-center text-green-600 dark:text-green-400">
                   <CheckCircle2 className="w-4 h-4 lg:w-6 lg:h-6" />
                 </div>
@@ -254,7 +243,7 @@ export default function Hero() {
                   <p className="text-sm lg:text-base text-foreground font-bold transition-colors duration-300">SEO Optimized</p>
                   <p className="text-xs text-muted-foreground transition-colors duration-300">Rank #1 Faster</p>
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -262,18 +251,14 @@ export default function Hero() {
 
       {/* Infinite Marquee */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-muted border-y border-border py-4 z-10 backdrop-blur-md transition-colors duration-300">
-        <motion.div
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 20, ease: "linear", repeat: Infinity }}
-          className="flex items-center whitespace-nowrap gap-16 pr-16 w-fit"
-        >
+        <div className="flex items-center whitespace-nowrap gap-16 pr-16 w-fit animate-marquee">
           {[...LOGOS, ...LOGOS].map((logo, idx) => (
             <div key={idx} className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors cursor-default">
               {logo.icon}
               <span className="text-lg font-semibold tracking-wider">{logo.name}</span>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -7,7 +7,11 @@ export async function GET(request, { params }) {
     if (!project) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
-    return NextResponse.json(project);
+    return NextResponse.json(project, {
+      headers: {
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+      },
+    });
   } catch (error) {
     const message = error.message?.includes("MONGODB_URI")
       ? "Database not configured. Please set MONGODB_URI in your .env file."

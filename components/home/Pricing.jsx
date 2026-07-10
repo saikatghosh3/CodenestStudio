@@ -55,8 +55,9 @@ const DEFAULT_PLANS = [
   },
 ];
 
-export default function Pricing() {
-  const [packages, setPackages] = useState(DEFAULT_PLANS);
+export default function Pricing({ initialPricing = [] }) {
+  const initialActive = initialPricing.filter((p) => p.isActive !== false);
+  const [packages, setPackages] = useState(initialActive.length > 0 ? initialActive : DEFAULT_PLANS);
 
   useEffect(() => {
     async function fetchPricing() {

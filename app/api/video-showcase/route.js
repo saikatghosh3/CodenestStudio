@@ -8,10 +8,18 @@ export async function GET(request) {
     const token = request.cookies.get("token")?.value;
     if (token && verifyToken(token)) {
       const videos = await getAllVideos();
-      return NextResponse.json(videos);
+      return NextResponse.json(videos, {
+        headers: {
+          "Cache-Control": "private, no-cache",
+        },
+      });
     }
     const videos = await getActiveVideos();
-    return NextResponse.json(videos);
+    return NextResponse.json(videos, {
+      headers: {
+        "Cache-Control": "public, s-maxage=120, stale-while-revalidate=300",
+      },
+    });
   } catch (error) {
     const message = error.message?.includes("MONGODB_URI")
       ? "Database not configured. Please set MONGODB_URI in your .env file."

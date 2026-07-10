@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/db";
 import Pricing from "@/models/Pricing";
+import { getCached, setCache, invalidateCache, CACHE_KEYS, CACHE_TTL } from "@/lib/cache";
 
 const DEFAULT_PLANS = [
   {
@@ -59,32 +60,47 @@ const DEFAULT_PLANS = [
 ];
 
 export async function getAllPricing(filters = {}) {
-  await dbConnect();
-  const query = {};
-  if (filters.isActive) query.isActive = filters.isActive === "true";
+  const cacheKey = filters.isActive ? `pricing:active` : CACHE_KEYS.PRICING;
+  const cached = getCached(cacheKey);
+  if (cached && !cached.stale) return cached.data;
 
-  let pricing = await Pricing.find(query).sort({ order: 1, createdAt: -1 }).lean();
+  try {
+    await dbConnect();
+    const query = {};
+    if (filters.isActive) query.isActive = filters.isActive === "true";
 
-  if (pricing.length === 0) {
-    pricing = await Pricing.create(DEFAULT_PLANS);
-    pricing = pricing.map((p) => p.toObject ? p.toObject() : p);
+    let pricing = await Pricing.find(query).sort({ order: 1, createdAt: -1 }).lean();
+
+    if (pricing.length === 0) {
+      pricing = await Pricing.create(DEFAULT_PLANS);
+      pricing = pricing.map((p) => (p.toObject ? p.toObject() : p));
+    }
+
+    setCache(cacheKey, pricing, CACHE_TTL.LONG);
+    return pricing;
+  } catch (error) {
+    if (cached) return cached.data;
+    throw error;
   }
-
-  return pricing;
 }
 
 export async function createPricing(data) {
   await dbConnect();
   const pricing = await Pricing.create(data);
+  invalidateCache(/^pricing/);
   return pricing.toObject();
 }
 
 export async function updatePricing(id, data) {
   await dbConnect();
-  return Pricing.findByIdAndUpdate(id, data, { new: true, runValidators: true }).lean();
+  const pricing = await Pricing.findByIdAndUpdate(id, data, { new: true, runValidators: true }).lean();
+  invalidateCache(/^pricing/);
+  return pricing;
 }
 
 export async function deletePricing(id) {
   await dbConnect();
-  return Pricing.findByIdAndDelete(id).lean();
+  const pricing = await Pricing.findByIdAndDelete(id).lean();
+  invalidateCache(/^pricing/);
+  return pricing;
 }

@@ -34,7 +34,7 @@ export default function CreateVideo() {
       const res = await fetch("/api/video-showcase", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, thumbnail: form.fallbackImage }),
       });
 
       const data = await res.json();

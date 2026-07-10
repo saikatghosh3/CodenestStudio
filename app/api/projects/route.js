@@ -11,7 +11,11 @@ export async function GET(request) {
     if (searchParams.get("featured")) filters.featured = searchParams.get("featured");
 
     const projects = await getAllProjects(filters);
-    return NextResponse.json(projects);
+    return NextResponse.json(projects, {
+      headers: {
+        "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",
+      },
+    });
   } catch (error) {
     const message = error.message?.includes("MONGODB_URI")
       ? "Database not configured. Please set MONGODB_URI in your .env file."

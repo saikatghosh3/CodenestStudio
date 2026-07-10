@@ -17,14 +17,42 @@ import Industries from "@/components/home/Industries";
 import VideoShowcase from "@/components/home/VideoShowcase";
 import ClientReviews from "@/components/home/ClientReviews";
 import ConsultationCTA from "@/components/home/ConsultationCTA";
+import { getAllProjects } from "@/services/projectServices";
+import { getAllCategories } from "@/services/categoryServices";
+import { getAllPricing } from "@/services/pricingServices";
+import { getAllReviews } from "@/services/reviewServices";
+import { getSettings } from "@/services/siteSettingServices";
+import { getActiveVideos } from "@/services/videoShowcaseServices";
 
-export default function Home() {
+async function fetchAllData() {
+  const [projects, categories, pricing, reviews, settings, videos] = await Promise.allSettled([
+    getAllProjects(),
+    getAllCategories(),
+    getAllPricing(),
+    getAllReviews(),
+    getSettings(),
+    getActiveVideos(),
+  ]);
+
+  return {
+    projects: projects.status === "fulfilled" ? projects.value : [],
+    categories: categories.status === "fulfilled" ? categories.value : [],
+    pricing: pricing.status === "fulfilled" ? pricing.value : [],
+    reviews: reviews.status === "fulfilled" ? reviews.value : [],
+    settings: settings.status === "fulfilled" ? settings.value : null,
+    videos: videos.status === "fulfilled" ? videos.value : [],
+  };
+}
+
+export default async function Home() {
+  const data = await fetchAllData();
+
   return (
     <main>
-      <Navbar />
+      <Navbar initialSettings={data.settings} />
       <Hero />
       <About />
-      <Projects />
+      <Projects initialProjects={data.projects} initialCategories={data.categories} />
       <WhyChooseUs />
       <ROIImpact />
       <DevelopmentProcess />
@@ -32,13 +60,13 @@ export default function Home() {
       <TechStack />
       <SuccessMetrics />
       <Industries />
-      <VideoShowcase />
-      <ClientReviews />
+      <VideoShowcase initialVideos={data.videos} />
+      <ClientReviews initialReviews={data.reviews} />
       <ConsultationCTA />
-      <Pricing />
+      <Pricing initialPricing={data.pricing} />
       <FAQ />
       <CTA />
-      <Footer />
+      <Footer initialSettings={data.settings} />
       <WhatsAppWidget />
     </main>
   );

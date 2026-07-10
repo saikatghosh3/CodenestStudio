@@ -6,7 +6,11 @@ import { getAllPricing, createPricing } from "@/services/pricingServices";
 export async function GET() {
   try {
     const pricing = await getAllPricing();
-    return NextResponse.json(pricing);
+    return NextResponse.json(pricing, {
+      headers: {
+        "Cache-Control": "public, s-maxage=120, stale-while-revalidate=300",
+      },
+    });
   } catch (error) {
     const message = error.message?.includes("MONGODB_URI")
       ? "Database not configured. Please set MONGODB_URI in your .env file."

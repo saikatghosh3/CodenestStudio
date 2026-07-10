@@ -67,9 +67,117 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
   background-color: hsl(210 100% 40% / 0.2);
   color: hsl(210 100% 40%);
+}
+
+[data-framer-portal-id] {
+  will-change: auto !important;
+}
+
+.smooth-scroll-container {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@keyframes chart-bar {
+  0%, 100% { transform: scaleX(0.75); }
+  50% { transform: scaleX(1); }
+}
+
+.animate-chart-bar {
+  animation: chart-bar 2.5s ease-in-out infinite;
+  transform-origin: left;
+}
+
+@keyframes bg-blob-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-20%, 20%) scale(1.15); }
+  50% { transform: translate(20%, -10%) scale(0.85); }
+  75% { transform: translate(-10%, -20%) scale(1.1); }
+}
+
+@keyframes bg-blob-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(15%, -15%) scale(0.9); }
+  50% { transform: translate(-15%, 15%) scale(1.15); }
+  75% { transform: translate(10%, 10%) scale(0.85); }
+}
+
+.animate-bg-blob-1 {
+  animation: bg-blob-1 15s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-bg-blob-2 {
+  animation: bg-blob-2 18s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes hero-blob-pulse-1 {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.2); opacity: 0.5; }
+}
+
+@keyframes hero-blob-pulse-2 {
+  0%, 100% { transform: scale(1); opacity: 0.2; }
+  50% { transform: scale(1.3); opacity: 0.4; }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes float-y-reverse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-hero-blob-1 {
+  animation: hero-blob-pulse-1 8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-hero-blob-2 {
+  animation: hero-blob-pulse-2 10s ease-in-out infinite 1s;
+  will-change: transform;
+}
+
+.animate-float-y {
+  animation: float-y 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-y-reverse {
+  animation: float-y-reverse 5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-marquee {
+  animation: marquee-scroll 20s linear infinite;
+  will-change: transform;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+.contain-layout {
+  contain: layout style paint;
 }

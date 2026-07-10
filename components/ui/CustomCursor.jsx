@@ -1,15 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 
 export default function CustomCursor() {
+  const [mounted, setMounted] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const rafRef = useRef(null);
+  const posRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
+    if (window.innerWidth <= 768) return;
+
+    setMounted(true);
+
     const updateMousePosition = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      posRef.current = { x: e.clientX, y: e.clientY };
+      if (!rafRef.current) {
+        rafRef.current = requestAnimationFrame(() => {
+          setMousePosition({ ...posRef.current });
+          rafRef.current = null;
+        });
+      }
     };
 
     const handleMouseOver = (e) => {
@@ -27,18 +40,17 @@ export default function CustomCursor() {
       }
     };
 
-    window.addEventListener("mousemove", updateMousePosition);
-    window.addEventListener("mouseover", handleMouseOver);
+    window.addEventListener("mousemove", updateMousePosition, { passive: true });
+    window.addEventListener("mouseover", handleMouseOver, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", updateMousePosition);
       window.removeEventListener("mouseover", handleMouseOver);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
-  if (typeof window !== "undefined" && window.innerWidth <= 768) {
-    return null;
-  }
+  if (!mounted) return null;
 
   const variants = {
     default: {
@@ -49,7 +61,7 @@ export default function CustomCursor() {
       backgroundColor: "rgba(255, 255, 255, 0.1)",
       border: "1px solid rgba(255, 255, 255, 0.5)",
       mixBlendMode: "difference",
-      transition: { type: "tween", ease: "backOut", duration: 0.1 }
+      transition: { type: "tween", ease: "backOut", duration: 0.15 }
     },
     hover: {
       x: mousePosition.x - 32,

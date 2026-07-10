@@ -1,16 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ExternalLink, Github, Star, AlertCircle, ArrowUpRight } from "lucide-react";
 import ProjectDemoModal from "@/components/ui/ProjectDemoModal";
 
-export default function Projects() {
-  const [projects, setProjects] = useState([]);
+export default function Projects({ initialProjects = [], initialCategories = [] }) {
+  const [projects, setProjects] = useState(initialProjects);
   const [activeCategory, setActiveCategory] = useState("All");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [dbError, setDbError] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(initialCategories);
   const [demoModalOpen, setDemoModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState({ url: "", title: "" });
 
@@ -124,23 +124,25 @@ export default function Projects() {
             </p>
           </div>
         ) : (
-          <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, idx) => (
-                <motion.div
-                  key={project._id}
-                  layout
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.4, delay: idx * 0.05 }}
-                  className="group relative rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/40 transition-all duration-400"
-                >
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProjects.map((project, idx) => (
+              <motion.div
+                key={project._id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: idx * 0.05 }}
+                className="group relative rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/40 transition-all duration-400"
+              >
                   <a href={`/projects/${project.slug}`} className="block relative aspect-[3/2] overflow-hidden">
                     {project.thumbnail ? (
                       <img
                         src={project.thumbnail}
                         alt={project.title}
+                        width={480}
+                        height={320}
+                        loading="lazy"
+                        decoding="async"
                         className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                     ) : (
@@ -222,9 +224,8 @@ export default function Projects() {
                     </div>
                   </div>
                 </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+            ))}
+          </div>
         )}
       </div>
 

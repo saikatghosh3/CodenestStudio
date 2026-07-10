@@ -12,15 +12,17 @@ const ICON_MAP = {
   Globe,
 };
 
-export default function Footer() {
-  const [settings, setSettings] = useState(null);
+export default function Footer({ initialSettings = null }) {
+  const [settings, setSettings] = useState(initialSettings);
 
   useEffect(() => {
-    fetch("/api/settings")
-      .then((r) => r.ok && r.json())
-      .then((data) => setSettings(data))
-      .catch(() => {});
-  }, []);
+    if (!initialSettings) {
+      fetch("/api/settings")
+        .then((r) => r.ok && r.json())
+        .then((data) => setSettings(data))
+        .catch(() => {});
+    }
+  }, [initialSettings]);
 
   const brandName = "CodeNestStudio";
   const siteName = "CodeNestStudio";

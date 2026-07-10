@@ -18,8 +18,8 @@ const AVATAR_COLORS = [
   "from-indigo-500 to-violet-600",
 ];
 
-export default function ClientReviews() {
-  const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
+export default function ClientReviews({ initialReviews = [] }) {
+  const [reviews, setReviews] = useState(initialReviews.length > 0 ? initialReviews : FALLBACK_REVIEWS);
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
 

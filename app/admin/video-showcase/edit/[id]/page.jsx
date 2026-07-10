@@ -66,7 +66,7 @@ export default function EditVideo() {
       const res = await fetch(`/api/video-showcase/${params.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, thumbnail: form.fallbackImage }),
       });
 
       const data = await res.json();

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, X, AlertTriangle } from "lucide-react";
+import { Play, X, AlertTriangle, Film } from "lucide-react";
 
 const DEFAULT_VIDEOS = [
   {
@@ -13,24 +13,36 @@ const DEFAULT_VIDEOS = [
   },
 ];
 
-export default function VideoShowcase() {
-  const [videos, setVideos] = useState(DEFAULT_VIDEOS);
+function getVideoImage(video) {
+  return video.fallbackImage || video.thumbnail || "";
+}
+
+export default function VideoShowcase({ initialVideos = [] }) {
+  const [videos, setVideos] = useState(() =>
+    initialVideos.length > 0
+      ? initialVideos.map((v) => ({ ...v, fallbackImage: getVideoImage(v) }))
+      : DEFAULT_VIDEOS
+  );
   const [activeVideo, setActiveVideo] = useState(null);
   const [iframeError, setIframeError] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     async function load() {
       try {
         const res = await fetch("/api/video-showcase");
         if (res.ok) {
           const data = await res.json();
-          if (data.length > 0) setVideos(data);
+          if (!cancelled && data.length > 0) {
+            setVideos(data.map((v) => ({ ...v, fallbackImage: getVideoImage(v) })));
+          }
         }
       } catch {
-        // use fallback
+        // keep existing state
       }
     }
     load();
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
@@ -50,10 +62,10 @@ export default function VideoShowcase() {
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
-  function openPlayer(video) {
+  const openPlayer = useCallback((video) => {
     setActiveVideo(video);
     setIframeError(false);
-  }
+  }, []);
 
   return (
     <section id="showreel" className="py-20 lg:py-28 relative overflow-hidden">
@@ -101,7 +113,7 @@ export default function VideoShowcase() {
                 key={video._id}
                 video={video}
                 index={idx}
-                onPlay={() => openPlayer(video)}
+                onPlay={openPlayer}
               />
             ))}
           </motion.div>
@@ -122,10 +134,13 @@ export default function VideoShowcase() {
   );
 }
 
-function VideoCard({ video, index, onPlay }) {
+const VideoCard = memo(function VideoCard({ video, index, onPlay }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
-  const hasImage = video.fallbackImage && !imgError;
+  const imageUrl = getVideoImage(video);
+  const hasImage = Boolean(imageUrl) && !imgError;
+
+  const handleClick = useCallback(() => onPlay(video), [onPlay, video]);
 
   return (
     <motion.div
@@ -134,36 +149,38 @@ function VideoCard({ video, index, onPlay }) {
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.08 }}
       className="group cursor-pointer"
-      onClick={onPlay}
+      onClick={handleClick}
     >
       <div className="relative rounded-xl overflow-hidden border border-border/60 bg-card hover:shadow-xl hover:shadow-black/5 hover:border-primary/20 transition-all duration-300">
         <div className="relative aspect-video overflow-hidden">
           {hasImage ? (
-            <>
-              <img
-                src={video.fallbackImage}
-                alt=""
-                className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
-                onLoad={() => setImgLoaded(true)}
-                onError={() => setImgError(true)}
-              />
-              {!imgLoaded && (
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-purple-600/10" />
-              )}
-            </>
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-background to-purple-600/8" />
+            <img
+              src={imageUrl}
+              alt={video.title || "Video thumbnail"}
+              width={640}
+              height={360}
+              loading="lazy"
+              decoding="async"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:scale-105 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+              onLoad={() => setImgLoaded(true)}
+              onError={() => setImgError(true)}
+            />
+          ) : null}
+
+          <div className={`absolute inset-0 bg-gradient-to-br from-primary/15 via-background to-purple-600/15 ${hasImage && imgLoaded ? "opacity-0" : "opacity-100"} transition-opacity duration-500`} />
+
+          {hasImage && !imgLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
           )}
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
 
           <div className="absolute inset-0 flex items-center justify-center">
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-lg group-hover:bg-primary/90 group-hover:border-primary/50 transition-all duration-300"
-            >
+            <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-lg group-hover:bg-primary/90 group-hover:border-primary/50 group-hover:scale-110 transition-all duration-300">
               <Play className="w-6 h-6 ml-0.5 fill-white text-white" />
-            </motion.div>
+            </div>
           </div>
 
           <div className="absolute bottom-0 left-0 right-0 p-3">
@@ -175,9 +192,9 @@ function VideoCard({ video, index, onPlay }) {
       </div>
     </motion.div>
   );
-}
+});
 
-function VideoModal({ video, iframeError, setIframeError, onClose }) {
+const VideoModal = memo(function VideoModal({ video, iframeError, setIframeError, onClose }) {
   const handleBackdrop = useCallback((e) => {
     if (e.target === e.currentTarget) onClose();
   }, [onClose]);
@@ -239,4 +256,4 @@ function VideoModal({ video, iframeError, setIframeError, onClose }) {
       </motion.div>
     </motion.div>
   );
-}
+});

@@ -30,14 +30,14 @@ export default function TechStack() {
         </motion.div>
 
         <div className="overflow-hidden">
-          <motion.div animate={{ x: ["-50%", "0%"] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="flex gap-8 w-max">
+          <div className="flex gap-8 w-max animate-marquee">
             {[...TECH, ...TECH].map((t, idx) => (
               <div key={idx} className="flex items-center gap-3 bg-card border border-border px-5 py-3 rounded-2xl text-foreground hover:scale-105 transition-transform">
                 <Code2 className="w-5 h-5 text-primary" />
                 <span className="font-semibold">{t}</span>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

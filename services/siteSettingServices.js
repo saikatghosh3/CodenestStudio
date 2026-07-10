@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/db";
 import SiteSetting from "@/models/SiteSetting";
+import { getCached, setCache, invalidateCache, CACHE_KEYS, CACHE_TTL } from "@/lib/cache";
 
 const DEFAULT_SETTINGS = {
   siteName: "CodeNestStudio",
@@ -24,13 +25,22 @@ const DEFAULT_SETTINGS = {
 };
 
 export async function getSettings() {
-  await dbConnect();
-  let settings = await SiteSetting.findOne().lean();
-  if (!settings) {
-    settings = await SiteSetting.create(DEFAULT_SETTINGS);
-    settings = settings.toObject();
+  const cached = getCached(CACHE_KEYS.SETTINGS);
+  if (cached && !cached.stale) return cached.data;
+
+  try {
+    await dbConnect();
+    let settings = await SiteSetting.findOne().lean();
+    if (!settings) {
+      settings = await SiteSetting.create(DEFAULT_SETTINGS);
+      settings = settings.toObject();
+    }
+    setCache(CACHE_KEYS.SETTINGS, settings, CACHE_TTL.VERY_LONG);
+    return settings;
+  } catch (error) {
+    if (cached) return cached.data;
+    throw error;
   }
-  return settings;
 }
 
 export async function updateSettings(data) {
@@ -42,5 +52,6 @@ export async function updateSettings(data) {
     Object.assign(settings, data);
     await settings.save();
   }
+  invalidateCache(CACHE_KEYS.SETTINGS);
   return settings.toObject();
 }

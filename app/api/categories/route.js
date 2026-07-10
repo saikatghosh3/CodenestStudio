@@ -6,7 +6,11 @@ import { getAllCategories, createCategory } from "@/services/categoryServices";
 export async function GET() {
   try {
     const categories = await getAllCategories();
-    return NextResponse.json(categories);
+    return NextResponse.json(categories, {
+      headers: {
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+      },
+    });
   } catch (error) {
     const message = error.message?.includes("MONGODB_URI")
       ? "Database not configured. Please set MONGODB_URI in your .env file."

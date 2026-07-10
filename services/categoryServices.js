@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/db";
 import Category from "@/models/Category";
+import { getCached, setCache, invalidateCache, CACHE_KEYS, CACHE_TTL } from "@/lib/cache";
 
 const DEFAULT_CATEGORIES = [
   { name: "Web App", description: "Full-stack web applications", order: 1 },
@@ -13,13 +14,22 @@ const DEFAULT_CATEGORIES = [
 ];
 
 export async function getAllCategories() {
-  await dbConnect();
-  let categories = await Category.find().sort({ order: 1, name: 1 }).lean();
-  if (categories.length === 0) {
-    categories = await Category.create(DEFAULT_CATEGORIES);
-    categories = categories.map((c) => c.toObject ? c.toObject() : c);
+  const cached = getCached(CACHE_KEYS.CATEGORIES);
+  if (cached && !cached.stale) return cached.data;
+
+  try {
+    await dbConnect();
+    let categories = await Category.find().sort({ order: 1, name: 1 }).lean();
+    if (categories.length === 0) {
+      categories = await Category.create(DEFAULT_CATEGORIES);
+      categories = categories.map((c) => (c.toObject ? c.toObject() : c));
+    }
+    setCache(CACHE_KEYS.CATEGORIES, categories, CACHE_TTL.VERY_LONG);
+    return categories;
+  } catch (error) {
+    if (cached) return cached.data;
+    throw error;
   }
-  return categories;
 }
 
 export async function getCategoryById(id) {
@@ -30,15 +40,20 @@ export async function getCategoryById(id) {
 export async function createCategory(data) {
   await dbConnect();
   const category = await Category.create(data);
+  invalidateCache(CACHE_KEYS.CATEGORIES);
   return category.toObject();
 }
 
 export async function updateCategory(id, data) {
   await dbConnect();
-  return Category.findByIdAndUpdate(id, data, { new: true, runValidators: true }).lean();
+  const category = await Category.findByIdAndUpdate(id, data, { new: true, runValidators: true }).lean();
+  invalidateCache(CACHE_KEYS.CATEGORIES);
+  return category;
 }
 
 export async function deleteCategory(id) {
   await dbConnect();
-  return Category.findByIdAndDelete(id).lean();
+  const category = await Category.findByIdAndDelete(id).lean();
+  invalidateCache(CACHE_KEYS.CATEGORIES);
+  return category;
 }

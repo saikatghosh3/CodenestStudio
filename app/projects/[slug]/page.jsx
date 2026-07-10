@@ -16,6 +16,7 @@ export default function ProjectDetail() {
   const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
     async function fetchProject() {
       try {
         const res = await fetch(`/api/projects/by-slug/${params.slug}`);
@@ -41,25 +42,44 @@ export default function ProjectDetail() {
             normalized.images = normalized.images || [];
           }
 
-          setProject(normalized);
+          if (!cancelled) setProject(normalized);
         }
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
     if (params.slug) fetchProject();
+    return () => { cancelled = true; };
   }, [params.slug]);
 
   if (loading) {
     return (
       <main>
         <Navbar />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-muted-foreground">Loading project...</p>
+        <div className="min-h-screen pt-24 sm:pt-28">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+            <div className="mb-8 h-4 w-32 bg-muted rounded animate-pulse" />
+            <div className="aspect-[21/9] max-h-[500px] bg-muted rounded-2xl sm:rounded-3xl mb-10 sm:mb-14 animate-pulse" />
+            <div className="grid lg:grid-cols-3 gap-6 sm:gap-10 lg:gap-14">
+              <div className="lg:col-span-2 space-y-4">
+                <div className="flex gap-3">
+                  <div className="h-6 w-20 bg-muted rounded-full animate-pulse" />
+                  <div className="h-6 w-28 bg-muted rounded-full animate-pulse" />
+                </div>
+                <div className="h-12 w-3/4 bg-muted rounded-lg animate-pulse" />
+                <div className="space-y-2">
+                  <div className="h-4 bg-muted rounded w-full animate-pulse" />
+                  <div className="h-4 bg-muted rounded w-5/6 animate-pulse" />
+                  <div className="h-4 bg-muted rounded w-2/3 animate-pulse" />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="h-40 bg-muted rounded-2xl animate-pulse" />
+                <div className="h-32 bg-muted rounded-2xl animate-pulse" />
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -89,15 +109,13 @@ export default function ProjectDetail() {
     <main>
       <Navbar />
       <div className="relative min-h-screen pt-24 sm:pt-28">
-        {/* Background */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/8 via-background to-background pointer-events-none" />
 
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-          {/* Back link */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.3 }}
             className="mb-8"
           >
             <a
@@ -109,18 +127,21 @@ export default function ProjectDetail() {
             </a>
           </motion.div>
 
-          {/* Hero Image */}
           {project.thumbnail && (
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.4, delay: 0.05 }}
               className="relative rounded-2xl sm:rounded-3xl overflow-hidden mb-10 sm:mb-14 bg-card border border-border shadow-xl"
             >
               <div className="aspect-[21/9] max-h-[500px]">
                 <img
                   src={project.thumbnail}
                   alt={project.title}
+                  width={1200}
+                  height={514}
+                  loading="eager"
+                  fetchPriority="high"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -136,14 +157,12 @@ export default function ProjectDetail() {
           )}
 
           <div className="grid lg:grid-cols-3 gap-6 sm:gap-10 lg:gap-14">
-            {/* Main Content */}
             <div className="lg:col-span-2">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
+                transition={{ duration: 0.35, delay: 0.1 }}
               >
-                {/* Meta */}
                 <div className="flex flex-wrap items-center gap-3 mb-4">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold bg-primary/10 text-primary rounded-full">
                     <Tag className="h-3 w-3" />
@@ -170,30 +189,31 @@ export default function ProjectDetail() {
                 </div>
               </motion.div>
 
-              {/* Gallery */}
               {allImages.length > 1 && (
                 <motion.div
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
+                  transition={{ duration: 0.35, delay: 0.15 }}
                 >
                   <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
                     <span className="w-1 h-5 bg-primary rounded-full" />
                     Project Gallery
                   </h2>
 
-                  {/* Active image */}
                   <div className="relative rounded-xl sm:rounded-2xl overflow-hidden mb-4 bg-card border border-border">
                     <div className="aspect-video">
                       <img
                         src={allImages[activeImage]}
                         alt={`${project.title} screenshot ${activeImage + 1}`}
+                        width={960}
+                        height={540}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                       />
                     </div>
                   </div>
 
-                  {/* Thumbnails */}
                   <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin">
                     {allImages.map((img, i) => (
                       <button
@@ -209,6 +229,10 @@ export default function ProjectDetail() {
                           <img
                             src={img}
                             alt={`Thumbnail ${i + 1}`}
+                            width={96}
+                            height={64}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -219,15 +243,13 @@ export default function ProjectDetail() {
               )}
             </div>
 
-            {/* Sidebar */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.35 }}
+              transition={{ duration: 0.35, delay: 0.2 }}
               className="lg:col-span-1"
             >
               <div className="lg:sticky lg:top-32 space-y-6">
-                {/* Actions */}
                 <div className="bg-card border border-border rounded-2xl p-6">
                   <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Actions</h3>
                   <div className="space-y-3">
@@ -260,7 +282,6 @@ export default function ProjectDetail() {
                   </div>
                 </div>
 
-                {/* Technologies */}
                 {project.technologies?.length > 0 && (
                   <div className="bg-card border border-border rounded-2xl p-6">
                     <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
@@ -280,7 +301,6 @@ export default function ProjectDetail() {
                   </div>
                 )}
 
-                {/* Project Info */}
                 <div className="bg-card border border-border rounded-2xl p-6">
                   <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">Project Info</h3>
                   <div className="space-y-3 text-sm">

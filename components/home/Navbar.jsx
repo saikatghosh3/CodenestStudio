@@ -7,11 +7,11 @@ import { Menu, X, Code2, MessageSquare, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
-export default function Navbar() {
+export default function Navbar({ initialSettings = null }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [settings, setSettings] = useState(null);
+  const [settings, setSettings] = useState(initialSettings);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -20,11 +20,13 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/settings")
-      .then((r) => r.ok && r.json())
-      .then((data) => setSettings(data))
-      .catch(() => {});
-  }, []);
+    if (!initialSettings) {
+      fetch("/api/settings")
+        .then((r) => r.ok && r.json())
+        .then((data) => setSettings(data))
+        .catch(() => {});
+    }
+  }, [initialSettings]);
 
   const brandName = "CodeNestStudio";
   const logoUrl = settings?.logo || "";
@@ -37,7 +39,7 @@ export default function Navbar() {
 
   const renderBrand = () => {
     if (logoUrl) {
-      return <img src={logoUrl} alt={brandName} className="h-7 sm:h-8 w-auto" />;
+      return <img src={logoUrl} alt={brandName} className="h-7 sm:h-8 w-auto" width={32} height={32} loading="eager" />;
     }
     return (
       <span className="text-lg sm:text-xl font-bold tracking-tight text-foreground transition-colors duration-300">
@@ -94,7 +96,7 @@ export default function Navbar() {
               rel="noopener noreferrer"
               className="ml-2 relative group overflow-hidden rounded-full p-[1px]"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-emerald-600 to-emerald-400 rounded-full animate-spin-slow opacity-70 group-hover:opacity-100 transition-opacity duration-300" style={{ animationDuration: '3s' }} />
+              <span className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-emerald-600 to-emerald-400 rounded-full animate-spin-slow opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative flex items-center gap-2 px-5 py-2.5 bg-background dark:bg-background rounded-full transition-colors group-hover:bg-emerald-50 dark:group-hover:bg-emerald-950/50">
                 <span className="text-sm font-semibold text-foreground transition-colors duration-300">Let's Talk</span>
                 <ChevronRight className="h-4 w-4 text-emerald-500 dark:text-emerald-400 group-hover:translate-x-1 transition-transform" />

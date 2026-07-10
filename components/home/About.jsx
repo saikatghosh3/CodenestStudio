@@ -11,15 +11,18 @@ function SkillCard({ service, index }) {
   const Icon = ICON_MAP[service.icon] || Code2;
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const rafRef = useRef(null);
 
   function handleMouseMove({ currentTarget, clientX, clientY }) {
-    const { left, top, width, height } = currentTarget.getBoundingClientRect();
-    const x = clientX - left;
-    const y = clientY - top;
-    
-    // For 3D tilt effect
-    mouseX.set((x / width) * 2 - 1);
-    mouseY.set((y / height) * 2 - 1);
+    if (rafRef.current) return;
+    rafRef.current = requestAnimationFrame(() => {
+      const { left, top, width, height } = currentTarget.getBoundingClientRect();
+      const x = clientX - left;
+      const y = clientY - top;
+      mouseX.set((x / width) * 2 - 1);
+      mouseY.set((y / height) * 2 - 1);
+      rafRef.current = null;
+    });
   }
 
   function handleMouseLeave() {
@@ -67,7 +70,7 @@ export default function About() {
     offset: ["start end", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   return (
     <section ref={containerRef} id="about" className="py-24 lg:py-32 relative overflow-hidden bg-background">

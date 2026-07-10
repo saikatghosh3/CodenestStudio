@@ -46,11 +46,9 @@ export default function ROIImpact() {
 
                 {/* subtle chart placeholder */}
                 <div className="mt-6 h-14 bg-muted rounded-lg overflow-hidden">
-                  <motion.div
-                    initial={{ width: "10%" }}
-                    whileInView={{ width: ["10%", "70%", "55%", "75%"] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="h-full bg-gradient-to-r from-emerald-400 to-blue-500"
+                  <div
+                    className="h-full bg-gradient-to-r from-emerald-400 to-blue-500 animate-chart-bar"
+                    style={{ width: "75%" }}
                   />
                 </div>
               </motion.div>
