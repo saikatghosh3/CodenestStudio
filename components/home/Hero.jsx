@@ -224,7 +224,7 @@ export default function Hero() {
               </div>
 
               {/* Floating Element 1 */}
-              <div className="absolute -top-6 -left-3 lg:-top-10 lg:-left-10 bg-card/80 backdrop-blur-xl border border-border p-2 lg:p-4 rounded-2xl shadow-xl flex items-center gap-2 lg:gap-4 translate-z-50 transition-colors duration-300 animate-float-y">
+              <div className="absolute top-2 left-2 sm:-top-6 sm:-left-3 lg:-top-10 lg:-left-10 bg-card/80 backdrop-blur-xl border border-border p-2 lg:p-4 rounded-2xl shadow-xl flex items-center gap-2 lg:gap-4 translate-z-50 transition-colors duration-300 animate-float-y">
                 <div className="w-8 h-8 lg:w-12 lg:h-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary">
                   <Zap className="w-4 h-4 lg:w-6 lg:h-6" />
                 </div>
@@ -235,7 +235,7 @@ export default function Hero() {
               </div>
 
               {/* Floating Element 2 */}
-              <div className="absolute -bottom-6 -right-3 lg:-bottom-10 lg:-right-10 bg-card/80 backdrop-blur-xl border border-border p-2 lg:p-4 rounded-2xl shadow-xl flex items-center gap-2 lg:gap-4 translate-z-50 transition-colors duration-300 animate-float-y-reverse">
+              <div className="absolute bottom-2 right-2 sm:-bottom-6 sm:-right-3 lg:-bottom-10 lg:-right-10 bg-card/80 backdrop-blur-xl border border-border p-2 lg:p-4 rounded-2xl shadow-xl flex items-center gap-2 lg:gap-4 translate-z-50 transition-colors duration-300 animate-float-y-reverse">
                 <div className="w-8 h-8 lg:w-12 lg:h-12 rounded-full bg-green-500/10 dark:bg-green-500/20 flex items-center justify-center text-green-600 dark:text-green-400">
                   <CheckCircle2 className="w-4 h-4 lg:w-6 lg:h-6" />
                 </div>

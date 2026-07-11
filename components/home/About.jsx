@@ -154,27 +154,23 @@ export default function About() {
               className="relative rounded-2xl lg:rounded-[2.5rem] border border-border bg-card p-4 sm:p-6 lg:p-8 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-50" />
-              <div className="relative z-10 grid grid-cols-2 gap-3 sm:gap-4">
-                <div className="space-y-3 sm:space-y-4">
+              <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                   <div className="rounded-2xl lg:rounded-3xl border border-border bg-card p-4 sm:p-5 lg:p-6 backdrop-blur-md">
                     <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 sm:mb-2">99<span className="text-primary">%</span></div>
                     <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-semibold">Client Retention</div>
                   </div>
                   <div className="rounded-2xl lg:rounded-3xl border border-border bg-card p-4 sm:p-5 lg:p-6 backdrop-blur-md">
-                    <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 sm:mb-2">100<span className="text-primary">%</span></div>
-                    <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-semibold">In-house Code</div>
-                  </div>
-                </div>
-                <div className="space-y-3 sm:space-y-4 pt-4 sm:pt-6 lg:pt-8">
-                  <div className="rounded-2xl lg:rounded-3xl border border-border bg-card p-4 sm:p-5 lg:p-6 backdrop-blur-md">
                     <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 sm:mb-2">24<span className="text-primary">/7</span></div>
                     <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-semibold">Support SLA</div>
+                  </div>
+                  <div className="rounded-2xl lg:rounded-3xl border border-border bg-card p-4 sm:p-5 lg:p-6 backdrop-blur-md">
+                    <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 sm:mb-2">100<span className="text-primary">%</span></div>
+                    <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-semibold">In-house Code</div>
                   </div>
                   <div className="rounded-2xl lg:rounded-3xl border border-border bg-card p-4 sm:p-5 lg:p-6 backdrop-blur-md">
                     <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-1 sm:mb-2">&lt;2<span className="text-primary">s</span></div>
                     <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-semibold">Load Times</div>
                   </div>
-                </div>
               </div>
             </motion.div>
         </div>

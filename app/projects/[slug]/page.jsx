@@ -115,7 +115,7 @@ export default function ProjectDetail() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2 }}
             className="mb-8"
           >
             <a
@@ -131,7 +131,7 @@ export default function ProjectDetail() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.05 }}
+              transition={{ duration: 0.25 }}
               className="relative rounded-2xl sm:rounded-3xl overflow-hidden mb-10 sm:mb-14 bg-card border border-border shadow-xl"
             >
               <div className="aspect-[21/9] max-h-[500px]">
@@ -161,7 +161,7 @@ export default function ProjectDetail() {
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.1 }}
+                transition={{ duration: 0.2 }}
               >
                 <div className="flex flex-wrap items-center gap-3 mb-4">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold bg-primary/10 text-primary rounded-full">
@@ -193,7 +193,7 @@ export default function ProjectDetail() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: 0.15 }}
+                  transition={{ duration: 0.2, delay: 0.05 }}
                 >
                   <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
                     <span className="w-1 h-5 bg-primary rounded-full" />
@@ -246,7 +246,7 @@ export default function ProjectDetail() {
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.2 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
               className="lg:col-span-1"
             >
               <div className="lg:sticky lg:top-32 space-y-6">
