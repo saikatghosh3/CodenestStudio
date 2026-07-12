@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 import { apiLimiter, getClientIp } from "@/lib/rateLimit";
-import { getAllCategories, createCategory } from "@/services/categoryServices";
+import { getAboutUs, updateAboutUs } from "@/services/aboutUsServices";
 
 export async function GET() {
   try {
-    const categories = await getAllCategories();
-    return NextResponse.json(categories, {
+    const about = await getAboutUs();
+    return NextResponse.json(about, {
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate",
       },
@@ -14,12 +14,12 @@ export async function GET() {
   } catch (error) {
     const message = error.message?.includes("MONGODB_URI")
       ? "Database not configured. Please set MONGODB_URI in your .env file."
-      : "Failed to fetch categories";
+      : "Failed to fetch about us data";
     return NextResponse.json({ error: message }, { status: 503 });
   }
 }
 
-export async function POST(request) {
+export async function PUT(request) {
   try {
     const ip = getClientIp(request);
     const { success } = apiLimiter(ip);
@@ -37,26 +37,14 @@ export async function POST(request) {
     }
 
     const data = await request.json();
-    if (!data.name) {
-      return NextResponse.json(
-        { error: "Category name is required" },
-        { status: 400 }
-      );
-    }
-
-    const category = await createCategory(data);
-    return NextResponse.json(category, { status: 201 });
+    const about = await updateAboutUs(data);
+    return NextResponse.json(about);
   } catch (error) {
-    if (error.code === 11000) {
-      return NextResponse.json(
-        { error: "A category with this name already exists" },
-        { status: 409 }
-      );
-    }
     const message = error.message?.includes("MONGODB_URI")
       ? "Database not configured. Please set MONGODB_URI in your .env file."
-      : "Failed to create category";
-    const errorResponse = process.env.NODE_ENV === "development" ? error.message || message : message;
+      : "Failed to update about us data";
+    const errorResponse =
+      process.env.NODE_ENV === "development" ? error.message || message : message;
     return NextResponse.json({ error: errorResponse }, { status: 503 });
   }
 }

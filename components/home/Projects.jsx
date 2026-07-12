@@ -18,8 +18,8 @@ export default function Projects({ initialProjects = [], initialCategories = [] 
     async function fetchData() {
       try {
         const [projRes, catRes] = await Promise.all([
-          fetch("/api/projects"),
-          fetch("/api/categories"),
+          fetch("/api/projects", { cache: "no-store" }),
+          fetch("/api/categories", { cache: "no-store" }),
         ]);
         if (projRes.ok) {
           const data = await projRes.json();

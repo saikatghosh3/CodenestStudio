@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Code2, LayoutDashboard, FolderOpen, Plus, LogOut, ArrowLeft, DollarSign, Settings, MessageSquare, Video, Tags, Menu, X } from "lucide-react";
+import { Code2, LayoutDashboard, FolderOpen, Plus, LogOut, ArrowLeft, DollarSign, Settings, MessageSquare, Video, Tags, Menu, X, Users } from "lucide-react";
 
 export default function AdminSidebar() {
   const router = useRouter();
@@ -27,6 +27,7 @@ export default function AdminSidebar() {
     { href: "/admin/video-showcase", label: "Video Showcase", icon: Video },
     { href: "/admin/reviews", label: "Reviews", icon: MessageSquare },
     { href: "/admin/pricing", label: "Pricing Plans", icon: DollarSign },
+    { href: "/admin/about-us", label: "About Us", icon: Users },
     { href: "/admin/settings", label: "Settings", icon: Settings },
   ];
 

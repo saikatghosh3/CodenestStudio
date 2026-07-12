@@ -47,7 +47,13 @@ export default function Footer({ initialSettings = null }) {
     return Globe;
   }
 
-  const navLinks = ["Home", "About", "Projects", "Clients", "FAQ"];
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Projects", href: "/#projects" },
+    { label: "Clients", href: "/#clients" },
+    { label: "FAQ", href: "/#faq" },
+  ];
 
   return (
     <footer className="relative bg-background border-t border-border overflow-hidden pt-20 pb-10">
@@ -99,13 +105,13 @@ export default function Footer({ initialSettings = null }) {
             <h4 className="text-foreground font-semibold mb-6 uppercase tracking-wider text-sm">Navigation</h4>
             <ul className="space-y-4">
               {navLinks.map((link) => (
-                <li key={link}>
+                <li key={link.label}>
                   <a
-                    href={`#${link.toLowerCase()}`}
+                    href={link.href}
                     className="text-muted-foreground hover:text-foreground text-sm flex items-center gap-2 group hover-target transition-colors"
                   >
                     <span className="h-px w-0 bg-primary group-hover:w-4 transition-all duration-300"></span>
-                    {link}
+                    {link.label}
                   </a>
                 </li>
               ))}
