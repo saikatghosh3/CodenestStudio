@@ -25,7 +25,7 @@ export default function DevelopmentProcess() {
           <span className="inline-block text-sm font-semibold text-primary uppercase tracking-widest border border-primary/20 bg-primary/10 dark:bg-primary/5 px-4 py-2 rounded-full mb-4">
             Development Process
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
             Our Process (Step-by-step)
           </h2>
           <p className="max-w-2xl mx-auto text-muted-foreground mt-4 text-base sm:text-lg">

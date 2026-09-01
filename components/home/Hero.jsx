@@ -1,67 +1,62 @@
 "use client";
 
-import { motion, useMotionValue, useTransform } from "framer-motion";
-import { ArrowRight, Sparkles, Terminal, Activity, Zap, CheckCircle2, Play, Code2, Layers, Cpu, Globe } from "lucide-react";
-import { useRef, useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight, Sparkles, Play, Code2, Layers, Cpu, Globe } from "lucide-react";
+import { useEffect, useState } from "react";
+import Earth from "@/components/ui/globe";
+import BookMeetingModal from "@/components/ui/BookMeetingModal";
 
 const TypewriterText = ({ text }) => {
   const [displayedText, setDisplayedText] = useState("");
-  
-  useEffect(() => {
-    let i = 0;
-    const intervalId = setInterval(() => {
-      setDisplayedText(text.slice(0, i + 1));
-      i++;
-      if (i > text.length) clearInterval(intervalId);
-    }, 50);
-    return () => clearInterval(intervalId);
-  }, [text]);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [index, setIndex] = useState(0);
 
-  return <span>{displayedText}<span className="animate-pulse ml-1 inline-block w-1.5 h-4 bg-primary"></span></span>;
+  useEffect(() => {
+    const typeSpeed = isDeleting ? 30 : 50;
+    let timeout;
+
+    if (!isDeleting && index === text.length) {
+      timeout = setTimeout(() => setIsDeleting(true), 2000);
+    } else if (isDeleting && index === 0) {
+      setIsDeleting(false);
+      timeout = setTimeout(() => {}, 500);
+    } else {
+      timeout = setTimeout(() => {
+        setIndex((prev) => prev + (isDeleting ? -1 : 1));
+      }, typeSpeed);
+    }
+
+    setDisplayedText(text.slice(0, index));
+    return () => clearTimeout(timeout);
+  }, [index, isDeleting, text]);
+
+  return (
+    <span className="relative inline-block">
+      <span className="invisible" aria-hidden="true">
+        {text}
+      </span>
+      <span className="absolute inset-0 whitespace-pre-wrap">
+        {displayedText}
+        <span className="animate-pulse ml-0.5 inline-block w-[0.5ch] h-[1em] bg-primary align-text-bottom" />
+      </span>
+    </span>
+  );
 };
 
 const LOGOS = [
-  { icon: <Code2 className="w-5 h-5"/>, name: "React" },
-  { icon: <Globe className="w-5 h-5"/>, name: "Next.js" },
-  { icon: <Layers className="w-5 h-5"/>, name: "Tailwind" },
-  { icon: <Cpu className="w-5 h-5"/>, name: "Framer" },
-  { icon: <Code2 className="w-5 h-5"/>, name: "Node.js" },
-  { icon: <Globe className="w-5 h-5"/>, name: "Vercel" },
+  { icon: <Code2 className="w-5 h-5" />, name: "React" },
+  { icon: <Globe className="w-5 h-5" />, name: "Next.js" },
+  { icon: <Layers className="w-5 h-5" />, name: "Tailwind" },
+  { icon: <Cpu className="w-5 h-5" />, name: "Framer" },
+  { icon: <Code2 className="w-5 h-5" />, name: "Node.js" },
+  { icon: <Globe className="w-5 h-5" />, name: "Vercel" },
 ];
 
 export default function Hero() {
-  const containerRef = useRef(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const rafRef = useRef(null);
-
-  const handleMouseMove = useCallback((e) => {
-    if (rafRef.current) return;
-    rafRef.current = requestAnimationFrame(() => {
-      if (!containerRef.current) { rafRef.current = null; return; }
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      mouseX.set(x / 40);
-      mouseY.set(y / 40);
-      rafRef.current = null;
-    });
-  }, [mouseX, mouseY]);
-
-  const handleMouseLeave = useCallback(() => {
-    mouseX.set(0);
-    mouseY.set(0);
-  }, [mouseX, mouseY]);
-
-  const rotateX = useTransform(mouseY, (val) => -val);
-  const rotateY = useTransform(mouseX, (val) => val);
-
+  const [meetingOpen, setMeetingOpen] = useState(false);
   return (
     <section
       id="home"
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 pb-16 lg:pt-40 lg:pb-24 bg-background transition-colors duration-500"
     >
       <div className="absolute inset-0 z-0 contain-layout">
@@ -70,8 +65,8 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          <div className="lg:col-span-7 space-y-8 text-left">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="space-y-6 text-left">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -79,8 +74,8 @@ export default function Hero() {
               className="inline-flex items-center gap-3 rounded-full border border-border bg-muted px-5 py-2 text-sm font-medium text-foreground backdrop-blur-xl transition-colors duration-300"
             >
               <div className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-primary" />
               </div>
               <Sparkles className="h-4 w-4 text-primary" />
               Award-Winning Enterprise Agency
@@ -90,7 +85,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.05] text-foreground transition-colors duration-300"
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tighter leading-[1.05] text-foreground transition-colors duration-300"
             >
               We Build Premium <br />
               <span className="bg-gradient-to-r from-primary via-blue-500 to-purple-600 dark:via-blue-400 dark:to-purple-500 bg-clip-text text-transparent">
@@ -102,7 +97,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-2xl text-lg sm:text-xl leading-relaxed text-muted-foreground font-light transition-colors duration-300"
+              className="max-w-2xl text-base sm:text-lg leading-relaxed text-muted-foreground font-light transition-colors duration-300"
             >
               <TypewriterText text="Elevate your brand with cutting-edge UI/UX design, motion graphics, and high-performance engineering designed for maximum conversion." />
             </motion.div>
@@ -113,21 +108,19 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6 pt-4"
             >
-              <motion.a
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                href={`https://wa.me/8801758197272?text=${encodeURIComponent("Hello, I'd like to discuss an enterprise web project.")}`}
-                target="_blank"
-                rel="noreferrer"
-                className="group relative inline-flex items-center justify-center gap-3 bg-foreground text-background px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-semibold overflow-hidden hover-target transition-colors duration-300"
+                onClick={() => setMeetingOpen(true)}
+                className="group relative inline-flex items-center justify-center gap-3 bg-foreground text-background px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-semibold overflow-hidden hover-target transition-colors duration-300 cursor-pointer"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   Book a Meeting
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </span>
                 <div className="absolute inset-0 bg-foreground/80 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
-              </motion.a>
-              
+              </motion.button>
+
               <motion.a
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -146,110 +139,45 @@ export default function Hero() {
               className="pt-8 sm:pt-12 border-t border-border grid grid-cols-3 gap-4 sm:gap-6 max-w-2xl transition-colors duration-300"
             >
               <div>
-                <p className="text-2xl sm:text-4xl font-bold text-foreground mb-1 transition-colors duration-300">10<span className="text-primary">+</span></p>
-                <p className="text-[10px] sm:text-sm text-muted-foreground font-medium uppercase tracking-wider transition-colors duration-300">Years Exp.</p>
+                <p className="text-xl sm:text-3xl font-bold text-foreground mb-1 transition-colors duration-300">
+                  10<span className="text-primary">+</span>
+                </p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground font-medium uppercase tracking-wider transition-colors duration-300">
+                  Years Exp.
+                </p>
               </div>
               <div>
-                <p className="text-2xl sm:text-4xl font-bold text-foreground mb-1 transition-colors duration-300">200<span className="text-primary">+</span></p>
-                <p className="text-[10px] sm:text-sm text-muted-foreground font-medium uppercase tracking-wider transition-colors duration-300">Projects</p>
+                <p className="text-xl sm:text-3xl font-bold text-foreground mb-1 transition-colors duration-300">
+                  200<span className="text-primary">+</span>
+                </p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground font-medium uppercase tracking-wider transition-colors duration-300">
+                  Projects
+                </p>
               </div>
               <div>
-                <p className="text-2xl sm:text-4xl font-bold text-foreground mb-1 transition-colors duration-300">99<span className="text-primary">%</span></p>
-                <p className="text-[10px] sm:text-sm text-muted-foreground font-medium uppercase tracking-wider transition-colors duration-300">Satisfaction</p>
+                <p className="text-xl sm:text-3xl font-bold text-foreground mb-1 transition-colors duration-300">
+                  99<span className="text-primary">%</span>
+                </p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground font-medium uppercase tracking-wider transition-colors duration-300">
+                  Satisfaction
+                </p>
               </div>
             </motion.div>
           </div>
 
-          <div className="lg:col-span-5 relative w-full min-h-[350px] lg:h-[600px] flex items-center justify-center lg:justify-end perspective-1000">
+          <div className="relative w-full flex items-center justify-center">
             <motion.div
-              style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-              initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full max-w-[500px] rounded-[2.5rem] bg-card/50 border border-border p-4 shadow-2xl backdrop-blur-2xl transition-colors duration-300"
+              className="w-full"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent rounded-[2.5rem] pointer-events-none" />
-              
-              <div className="relative bg-background rounded-[2rem] border border-border overflow-hidden transition-colors duration-300 shadow-inner">
-                <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/20 transition-colors duration-300">
-                  <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-red-500" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                    <div className="w-3 h-3 rounded-full bg-green-500" />
-                  </div>
-                  <div className="mx-auto px-4 py-1 rounded-md bg-muted text-xs text-muted-foreground font-mono flex items-center gap-2 transition-colors duration-300">
-                    <Terminal className="w-3 h-3 text-primary" />
-                    npm run dev
-                  </div>
-                </div>
-                
-                <div className="p-6 font-mono text-sm leading-relaxed">
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1, duration: 0.5 }}
-                    className="text-primary mb-2"
-                  >
-                    $ initializing project...
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.5 }}
-                    className="text-foreground transition-colors duration-300"
-                  >
-                    <span className="text-purple-600 dark:text-purple-400">import</span> {'{'} motion {'}'} <span className="text-purple-600 dark:text-purple-400">from</span> <span className="text-green-600 dark:text-green-400">'framer-motion'</span>;
-                    <br/><br/>
-                    <span className="text-blue-600 dark:text-blue-400">const</span> EnterpriseApp = () =&gt; {'{'}
-                    <br/>
-                    &nbsp;&nbsp;<span className="text-purple-600 dark:text-purple-400">return</span> (
-                    <br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span className="text-blue-500 dark:text-blue-300">motion.div</span>
-                    <br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;animate={'{'} scale: 1.05 {'}'}
-                    <br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;className=<span className="text-green-600 dark:text-green-400">"premium-ui"</span>
-                    <br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&gt;
-                    <br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;High Performance Delivered
-                    <br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span className="text-blue-500 dark:text-blue-300">motion.div</span>&gt;
-                    <br/>
-                    &nbsp;&nbsp;);
-                    <br/>
-                    {'}'};
-                  </motion.div>
-                </div>
-              </div>
-
-              {/* Floating Element 1 */}
-              <div className="absolute top-2 left-2 sm:-top-6 sm:-left-3 lg:-top-10 lg:-left-10 bg-card/80 backdrop-blur-xl border border-border p-2 lg:p-4 rounded-2xl shadow-xl flex items-center gap-2 lg:gap-4 translate-z-50 transition-colors duration-300 animate-float-y">
-                <div className="w-8 h-8 lg:w-12 lg:h-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary">
-                  <Zap className="w-4 h-4 lg:w-6 lg:h-6" />
-                </div>
-                <div>
-                  <p className="text-sm lg:text-base text-foreground font-bold transition-colors duration-300">100/100</p>
-                  <p className="text-xs text-muted-foreground transition-colors duration-300">Performance Score</p>
-                </div>
-              </div>
-
-              {/* Floating Element 2 */}
-              <div className="absolute bottom-2 right-2 sm:-bottom-6 sm:-right-3 lg:-bottom-10 lg:-right-10 bg-card/80 backdrop-blur-xl border border-border p-2 lg:p-4 rounded-2xl shadow-xl flex items-center gap-2 lg:gap-4 translate-z-50 transition-colors duration-300 animate-float-y-reverse">
-                <div className="w-8 h-8 lg:w-12 lg:h-12 rounded-full bg-green-500/10 dark:bg-green-500/20 flex items-center justify-center text-green-600 dark:text-green-400">
-                  <CheckCircle2 className="w-4 h-4 lg:w-6 lg:h-6" />
-                </div>
-                <div>
-                  <p className="text-sm lg:text-base text-foreground font-bold transition-colors duration-300">SEO Optimized</p>
-                  <p className="text-xs text-muted-foreground transition-colors duration-300">Rank #1 Faster</p>
-                </div>
-              </div>
+              <Earth />
             </motion.div>
           </div>
         </div>
       </div>
 
-      {/* Infinite Marquee */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-muted border-y border-border py-4 z-10 backdrop-blur-md transition-colors duration-300">
         <div className="flex items-center whitespace-nowrap gap-16 pr-16 w-fit animate-marquee">
           {[...LOGOS, ...LOGOS].map((logo, idx) => (
@@ -260,6 +188,8 @@ export default function Hero() {
           ))}
         </div>
       </div>
+
+      <BookMeetingModal isOpen={meetingOpen} onClose={() => setMeetingOpen(false)} />
     </section>
   );
 }

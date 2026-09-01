@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Code2, LayoutDashboard, FolderOpen, Plus, LogOut, ArrowLeft, DollarSign, Settings, MessageSquare, Video, Tags, Menu, X, Users } from "lucide-react";
+import { Code2, LayoutDashboard, FolderOpen, Plus, LogOut, ArrowLeft, DollarSign, Settings, MessageSquare, Video, Tags, Menu, X, Users, Palette, Mail } from "lucide-react";
 
 export default function AdminSidebar() {
   const router = useRouter();
@@ -23,9 +23,12 @@ export default function AdminSidebar() {
     { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/projects", label: "All Projects", icon: FolderOpen },
     { href: "/admin/projects/create", label: "New Project", icon: Plus },
+    { href: "/admin/frontend-designs", label: "Frontend Designs", icon: Palette },
+    { href: "/admin/frontend-designs/create", label: "New Design", icon: Palette },
     { href: "/admin/categories", label: "Categories", icon: Tags },
     { href: "/admin/video-showcase", label: "Video Showcase", icon: Video },
     { href: "/admin/reviews", label: "Reviews", icon: MessageSquare },
+    { href: "/admin/messages", label: "Messages", icon: Mail },
     { href: "/admin/pricing", label: "Pricing Plans", icon: DollarSign },
     { href: "/admin/about-us", label: "About Us", icon: Users },
     { href: "/admin/settings", label: "Settings", icon: Settings },
@@ -35,6 +38,10 @@ export default function AdminSidebar() {
     return pathname === href ||
       (href === "/admin/projects" &&
         pathname.startsWith("/admin/projects") &&
+        !pathname.includes("/create") &&
+        !pathname.includes("/edit")) ||
+      (href === "/admin/frontend-designs" &&
+        pathname.startsWith("/admin/frontend-designs") &&
         !pathname.includes("/create") &&
         !pathname.includes("/edit"));
   }

@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Zap, ShieldCheck, Star, Calendar } from "lucide-react";
+import BookMeetingModal from "@/components/ui/BookMeetingModal";
 
 export default function CTA() {
+  const [meetingOpen, setMeetingOpen] = useState(false);
   return (
     <section className="py-24 lg:py-32 relative bg-background overflow-hidden">
       {/* Animated Glowing Backgrounds */}
@@ -31,7 +34,7 @@ export default function CTA() {
                 <span>Start Your Project</span>
               </div>
               
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-foreground">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-foreground">
                 Ready to build something <br />
                 <span className="bg-gradient-to-r from-primary via-purple-400 to-primary bg-clip-text text-transparent animate-gradient-x">
                   extraordinary?
@@ -70,20 +73,18 @@ export default function CTA() {
                   <div className="absolute inset-0 bg-gradient-to-b from-card/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 
                 <div className="text-center space-y-2 relative z-10">
-                  <h3 className="text-2xl font-bold text-foreground">Let's Discuss</h3>
+                  <h3 className="text-2xl font-bold text-foreground">Let&apos;s Discuss</h3>
                   <p className="text-muted-foreground text-sm">Schedule a free consultation or chat with us instantly.</p>
                 </div>
 
                 <div className="space-y-4 relative z-10">
-                  <a
-                    href="https://cal.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={() => setMeetingOpen(true)}
                     className="w-full py-4 px-6 rounded-full font-bold transition-all duration-300 flex items-center justify-center gap-3 bg-foreground text-background hover:bg-foreground/90 hover:scale-[1.02] hover-target"
                   >
                     <Calendar className="h-5 w-5" />
                     Book a Meeting
-                  </a>
+                  </button>
 
                   <a
                     href={`https://wa.me/8801758197272?text=${encodeURIComponent("Hello, I would like to discuss an enterprise web project.")}`}
@@ -107,6 +108,8 @@ export default function CTA() {
           </div>
         </motion.div>
       </div>
+
+      <BookMeetingModal isOpen={meetingOpen} onClose={() => setMeetingOpen(false)} />
     </section>
   );
 }

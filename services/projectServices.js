@@ -19,7 +19,7 @@ export async function getAllProjects(filters = {}) {
     if (filters.category) query.category = filters.category;
     if (filters.featured) query.featured = filters.featured === "true";
     const projects = await Project.find(query).sort({ createdAt: -1 }).lean();
-    setCache(cacheKey, projects, CACHE_TTL.MEDIUM);
+    setCache(cacheKey, projects, CACHE_TTL.LONG);
     return projects;
   } catch (error) {
     if (cached) return cached.data;
@@ -50,7 +50,7 @@ export async function getFeaturedProjects() {
   try {
     await dbConnect();
     const projects = await Project.find({ featured: true }).sort({ createdAt: -1 }).lean();
-    setCache(CACHE_KEYS.PROJECTS_FEATURED, projects, CACHE_TTL.MEDIUM);
+    setCache(CACHE_KEYS.PROJECTS_FEATURED, projects, CACHE_TTL.LONG);
     return projects;
   } catch (error) {
     if (cached) return cached.data;

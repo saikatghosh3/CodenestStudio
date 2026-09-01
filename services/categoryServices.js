@@ -20,7 +20,7 @@ export async function getAllCategories() {
   try {
     await dbConnect();
     let categories = await Category.find().sort({ order: 1, name: 1 }).lean();
-    setCache(CACHE_KEYS.CATEGORIES, categories, CACHE_TTL.SHORT);
+    setCache(CACHE_KEYS.CATEGORIES, categories, CACHE_TTL.LONG);
     return categories;
   } catch (error) {
     if (cached) return cached.data;

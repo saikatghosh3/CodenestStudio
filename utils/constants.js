@@ -2,8 +2,10 @@ export const NAV_LINKS = [
   { label: "Home", href: "#home" },
   { label: "About", href: "/about" },
   { label: "Projects", href: "#projects" },
+  { label: "Designs", href: "#frontend-designs" },
   { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export const CATEGORIES = [

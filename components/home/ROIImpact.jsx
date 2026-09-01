@@ -16,7 +16,7 @@ export default function ROIImpact() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
           <span className="inline-block text-sm font-semibold text-primary uppercase tracking-widest border border-primary/20 bg-primary/10 px-4 py-2 rounded-full mb-4">ROI & Business Impact</span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">Business Outcomes Over Technology</h2>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">Business Outcomes Over Technology</h2>
           <p className="max-w-2xl mx-auto text-muted-foreground mt-3">We focus on measurable impact: more users, higher conversions, and faster growth.</p>
         </motion.div>
 

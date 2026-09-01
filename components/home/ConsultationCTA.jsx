@@ -1,14 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Phone, Mail, Calendar } from "lucide-react";
+import BookMeetingModal from "@/components/ui/BookMeetingModal";
 
 export default function ConsultationCTA() {
+  const [meetingOpen, setMeetingOpen] = useState(false);
   return (
     <section id="consult" className="py-20 lg:py-28 relative bg-gradient-to-br from-primary/6 to-purple-900/2">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="rounded-2xl sm:rounded-3xl p-6 sm:p-10 bg-card border border-border backdrop-blur-md text-center">
-          <h3 className="text-3xl font-bold text-foreground mb-2">Book a Free Consultation</h3>
+          <h3 className="text-2xl font-bold text-foreground mb-2">Book a Free Consultation</h3>
           <p className="text-muted-foreground mb-6">Speak with our senior engineers to discuss your project and get a tailored roadmap.</p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -18,9 +21,9 @@ export default function ConsultationCTA() {
             <a href="mailto:codersync9@gmail.com" className="inline-flex items-center gap-2 px-6 py-3 bg-card text-foreground rounded-full font-semibold hover:bg-secondary transition-colors">
               <Mail className="w-4 h-4" /> Email
             </a>
-            <a href="https://calendly.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-card text-foreground rounded-full font-semibold hover:bg-secondary transition-colors">
+            <button onClick={() => setMeetingOpen(true)} className="inline-flex items-center gap-2 px-6 py-3 bg-card text-foreground rounded-full font-semibold hover:bg-secondary transition-colors">
               <Calendar className="w-4 h-4" /> Schedule
-            </a>
+            </button>
           </div>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-6">
@@ -33,6 +36,8 @@ export default function ConsultationCTA() {
           </div>
         </motion.div>
       </div>
+
+      <BookMeetingModal isOpen={meetingOpen} onClose={() => setMeetingOpen(false)} />
     </section>
   );
 }

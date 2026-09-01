@@ -95,7 +95,7 @@ export async function getAboutUs() {
       about = await AboutUs.create(DEFAULT_ABOUT_US);
       about = about.toObject();
     }
-    setCache(CACHE_KEYS.ABOUT_US, about, CACHE_TTL.SHORT);
+    setCache(CACHE_KEYS.ABOUT_US, about, CACHE_TTL.LONG);
     return about;
   } catch (error) {
     if (cached) return cached.data;

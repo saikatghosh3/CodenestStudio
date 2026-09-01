@@ -2,9 +2,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/lib/ThemeProvider";
-import CustomCursor from "@/components/ui/CustomCursor";
 import AnimatedBackground from "@/components/ui/AnimatedBackground";
 import ScrollToTop from "@/components/ui/ScrollToTop";
+import Preloader from "@/components/ui/Preloader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -60,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.className} antialiased bg-background text-foreground selection:bg-primary/20 selection:text-primary transition-colors duration-300`}>
         <ThemeProvider>
-          <CustomCursor />
+          <Preloader />
           <AnimatedBackground />
           <ScrollToTop />
           <div className="relative z-10 flex flex-col min-h-screen">

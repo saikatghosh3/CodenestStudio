@@ -85,7 +85,7 @@ export default function VideoShowcase({ initialVideos = [] }) {
             <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             Video Showcase
           </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
             Our Work in{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
               Motion

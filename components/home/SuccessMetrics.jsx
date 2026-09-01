@@ -18,7 +18,7 @@ export default function SuccessMetrics() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
           <span className="inline-block text-sm font-semibold text-primary uppercase tracking-widest border border-primary/20 bg-primary/10 px-4 py-2 rounded-full mb-4">Success Metrics</span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">Proven Results</h2>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">Proven Results</h2>
           <p className="max-w-2xl mx-auto text-muted-foreground mt-3">Numbers that show our impact and reliability.</p>
         </motion.div>
 

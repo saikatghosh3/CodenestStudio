@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { Check, Sparkles, ArrowRight } from "lucide-react";
 
 const DEFAULT_PLANS = [
@@ -55,9 +56,42 @@ const DEFAULT_PLANS = [
   },
 ];
 
+const revealVariants = {
+  hidden: (c) => ({
+    opacity: 0,
+    x: 0,
+    y: 140,
+    scale: 0.85,
+    rotate: c.rotate,
+  }),
+  show: (c) => ({
+    opacity: 1,
+    x: c.x,
+    y: 0,
+    scale: 1,
+    rotate: 0,
+    transition: {
+      type: "spring",
+      stiffness: 55,
+      damping: 16,
+      mass: 1,
+      delay: c.delay,
+    },
+  }),
+};
+
 export default function Pricing({ initialPricing = [] }) {
   const initialActive = initialPricing.filter((p) => p.isActive !== false);
   const [packages, setPackages] = useState(initialActive.length > 0 ? initialActive : DEFAULT_PLANS);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     async function fetchPricing() {
@@ -91,7 +125,7 @@ export default function Pricing({ initialPricing = [] }) {
           <span className="inline-block text-sm font-semibold text-primary uppercase tracking-widest bg-primary/10 border border-primary/20 px-4 py-1.5 rounded-full mb-6">
             Investment
           </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight mb-6">
             Transparent <span className="text-primary">Pricing</span>
           </h2>
           <p className="max-w-2xl mx-auto text-muted-foreground text-lg leading-relaxed">
@@ -100,13 +134,21 @@ export default function Pricing({ initialPricing = [] }) {
         </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-8 items-center max-w-6xl mx-auto">
-          {packages.map((pkg, idx) => (
+          {packages.map((pkg, idx) => {
+            const isLeft = idx === 0;
+            const isRight = idx === 2;
+            return (
             <motion.div
               key={pkg._id || idx}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              custom={{
+                x: isDesktop ? (isLeft ? -170 : isRight ? 170 : 0) : 0,
+                rotate: isDesktop ? (isLeft ? -7 : isRight ? 7 : 0) : 0,
+                delay: idx === 1 ? 0.15 : 0,
+              }}
+              variants={revealVariants}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.25 }}
               className={`relative flex flex-col p-6 sm:p-8 rounded-2xl lg:rounded-[2.5rem] border ${
                 pkg.popular 
                   ? "border-primary bg-gradient-to-b from-primary/10 to-transparent lg:-mt-8 lg:mb-8 shadow-2xl shadow-primary/20" 
@@ -147,6 +189,19 @@ export default function Pricing({ initialPricing = [] }) {
                 ))}
               </ul>
 
+              {pkg.price === "Let's Talk" || pkg.buttonText === "Contact Sales" ? (
+                <Link
+                  href="/contact"
+                  className={`w-full py-4 px-6 rounded-full font-bold transition-all duration-300 flex items-center justify-center gap-2 group-hover:scale-[1.02] ${
+                    pkg.popular
+                      ? "bg-primary text-white hover:bg-primary/90 shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+                      : "bg-card text-foreground hover:bg-secondary border border-border"
+                  }`}
+                >
+                  {pkg.buttonText}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              ) : (
               <a
                 href={`https://wa.me/8801758197272?text=${encodeURIComponent(`Hello, I'm interested in the ${pkg.name} package.`)}`}
                 target="_blank"
@@ -160,8 +215,10 @@ export default function Pricing({ initialPricing = [] }) {
                 {pkg.buttonText}
                 <ArrowRight className="h-4 w-4" />
               </a>
+              )}
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,11 +1,18 @@
 "use client";
 
-import { motion, useScroll, useTransform, useMotionTemplate, useMotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionTemplate, useMotionValue, useReducedMotion } from "framer-motion";
 import { Globe, Palette, Smartphone, Cloud, Sparkles, Zap, Code2, Database, Layout, Server } from "lucide-react";
-import { useRef, MouseEvent } from "react";
+import { useRef, useState, useEffect } from "react";
 import { SERVICES } from "@/utils/constants";
 
 const ICON_MAP = { Globe, Palette, Smartphone, Cloud };
+
+const METRICS = [
+  { prefix: "99", accent: "%", label: "Client Retention" },
+  { prefix: "24", accent: "/7", label: "Support SLA" },
+  { prefix: "100", accent: "%", label: "In-house Code" },
+  { prefix: "<2", accent: "s", label: "Load Times" },
+];
 
 function SkillCard({ service, index }) {
   const Icon = ICON_MAP[service.icon] || Code2;
@@ -72,6 +79,20 @@ export default function About() {
 
   const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
+  const [order, setOrder] = useState([0, 1, 2, 3]);
+  const pausedRef = useRef(false);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const id = setInterval(() => {
+      if (!pausedRef.current) {
+        setOrder((prev) => [...prev.slice(1), prev[0]]);
+      }
+    }, 4000);
+    return () => clearInterval(id);
+  }, [reduceMotion]);
+
   return (
     <section ref={containerRef} id="about" className="py-24 lg:py-32 relative overflow-hidden bg-background">
       {/* Background Elements */}
@@ -96,7 +117,7 @@ export default function About() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 max-w-3xl"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 max-w-3xl"
           >
             Engineering <span className="bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">Digital Excellence</span>
           </motion.h2>
@@ -108,7 +129,7 @@ export default function About() {
             transition={{ delay: 0.1 }}
             className="text-lg text-muted-foreground max-w-2xl leading-relaxed"
           >
-            We don't just write code. We architect scalable, high-performance web applications that drive real business growth and leave lasting impressions.
+            We don&apos;t just write code. We architect scalable, high-performance web applications that drive real business growth and leave lasting impressions.
           </motion.p>
         </div>
 
@@ -151,26 +172,31 @@ export default function About() {
 
             <motion.div
               style={{ y }}
+              onMouseEnter={() => { pausedRef.current = true; }}
+              onMouseLeave={() => { pausedRef.current = false; }}
               className="relative rounded-2xl lg:rounded-[2.5rem] border border-border bg-card p-4 sm:p-6 lg:p-8 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-50" />
+
               <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                  <div className="rounded-2xl lg:rounded-3xl border border-border bg-card p-4 sm:p-5 lg:p-6 backdrop-blur-md overflow-hidden min-w-0">
-                    <div className="text-2xl sm:text-3xl lg:text-[2rem] font-bold text-foreground mb-1 sm:mb-2 whitespace-nowrap">99<span className="text-primary">%</span></div>
-                    <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-semibold">Client Retention</div>
-                  </div>
-                  <div className="rounded-2xl lg:rounded-3xl border border-border bg-card p-4 sm:p-5 lg:p-6 backdrop-blur-md overflow-hidden min-w-0">
-                    <div className="text-2xl sm:text-3xl lg:text-[2rem] font-bold text-foreground mb-1 sm:mb-2 whitespace-nowrap">24<span className="text-primary">/7</span></div>
-                    <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-semibold">Support SLA</div>
-                  </div>
-                  <div className="rounded-2xl lg:rounded-3xl border border-border bg-card p-4 sm:p-5 lg:p-6 backdrop-blur-md overflow-hidden min-w-0">
-                    <div className="text-2xl sm:text-3xl lg:text-[2rem] font-bold text-foreground mb-1 sm:mb-2 whitespace-nowrap">100<span className="text-primary">%</span></div>
-                    <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-semibold">In-house Code</div>
-                  </div>
-                  <div className="rounded-2xl lg:rounded-3xl border border-border bg-card p-4 sm:p-5 lg:p-6 backdrop-blur-md overflow-hidden min-w-0">
-                    <div className="text-2xl sm:text-3xl lg:text-[2rem] font-bold text-foreground mb-1 sm:mb-2 whitespace-nowrap">&lt;2<span className="text-primary">s</span></div>
-                    <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider font-semibold">Load Times</div>
-                  </div>
+                {order.map((idx) => {
+                  const m = METRICS[idx];
+                  return (
+                    <motion.div
+                      key={m.label}
+                      layout
+                      transition={{ layout: { type: "spring", stiffness: 320, damping: 30 } }}
+                      className="rounded-xl lg:rounded-2xl border border-border bg-card p-3 sm:p-4 lg:p-5 backdrop-blur-md overflow-hidden min-w-0"
+                    >
+                      <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-0.5 sm:mb-1 whitespace-nowrap">
+                        {m.prefix}<span className="text-primary">{m.accent}</span>
+                      </div>
+                      <div className="text-[9px] sm:text-[10px] lg:text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                        {m.label}
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             </motion.div>
         </div>

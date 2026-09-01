@@ -53,6 +53,7 @@ export default function Footer({ initialSettings = null }) {
     { label: "Projects", href: "/#projects" },
     { label: "Clients", href: "/#clients" },
     { label: "FAQ", href: "/#faq" },
+    { label: "Contact", href: "/contact" },
   ];
 
   return (
