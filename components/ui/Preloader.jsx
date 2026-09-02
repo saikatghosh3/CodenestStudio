@@ -1,34 +1,47 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import { Code2 } from "lucide-react";
 
 export default function Preloader() {
-  const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
   const [show, setShow] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const prevPath = useRef(pathname);
 
   useEffect(() => {
-    setMounted(true);
     document.body.style.overflow = "hidden";
-    const loadTimer = setTimeout(() => setLoading(false), 2200);
-    const hideTimer = setTimeout(() => {
+    const timer = setTimeout(() => {
       setShow(false);
       document.body.style.overflow = "";
-    }, 3000);
+    }, 2200);
     return () => {
-      clearTimeout(loadTimer);
-      clearTimeout(hideTimer);
+      clearTimeout(timer);
       document.body.style.overflow = "";
     };
   }, []);
+
+  useEffect(() => {
+    if (pathname === prevPath.current) return;
+    prevPath.current = pathname;
+    setShow(true);
+    document.body.style.overflow = "hidden";
+    const timer = setTimeout(() => {
+      setShow(false);
+      document.body.style.overflow = "";
+    }, 900);
+    return () => {
+      clearTimeout(timer);
+      document.body.style.overflow = "";
+    };
+  }, [pathname]);
 
   const name = "CodeNestStudio";
 
   return (
     <AnimatePresence>
-      {mounted && show && (
+      {show && (
         <motion.div
           exit={{ opacity: 0, y: "-100%" }}
           transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
@@ -76,15 +89,15 @@ export default function Preloader() {
               ))}
             </div>
 
-            <motion.div className="mt-5 h-1 w-44 sm:w-56 rounded-full bg-primary/15 overflow-hidden">
+            <div className="mt-5 h-1 w-44 sm:w-56 rounded-full bg-primary/15 overflow-hidden">
               <motion.div
                 initial={{ scaleX: 0 }}
-                animate={{ scaleX: loading ? 0.15 : 1 }}
-                transition={{ duration: 2.2, ease: "easeInOut" }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 2, ease: "easeInOut" }}
                 style={{ transformOrigin: "left" }}
                 className="h-full w-full rounded-full bg-gradient-to-r from-primary to-accent"
               />
-            </motion.div>
+            </div>
 
             <motion.p
               initial={{ opacity: 0 }}
