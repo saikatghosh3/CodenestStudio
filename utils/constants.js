@@ -41,9 +41,19 @@ export const FAQ_DATA = [
       "We follow an agile methodology with clear phases: Discovery & Planning, Design, Development, Testing, and Deployment. You receive regular updates and can provide feedback throughout the process.",
   },
   {
+    question: "How do you manage and deliver projects?",
+    answer:
+      "We follow a structured, phase-wise development approach to ensure quality, transparency, and client satisfaction at every stage. Each phase is completed with a dedicated client meeting and review session, allowing us to gather feedback, make the necessary corrections, and proceed to the next phase with proper alignment. Our typical development phases include UI/UX Design, Backend & Admin Panel Development, Security Implementation, and Deployment. This systematic workflow helps us maintain quality throughout the project while ensuring that the final product meets the client's requirements and expectations.",
+  },
+  {
     question: "Can you work with our existing team?",
     answer:
-      "Absolutely. We can integrate seamlessly with your existing development team, whether you need additional capacity, specific expertise, or project leadership.",
+      "We have a dedicated and highly skilled professional team capable of handling a wide range of projects and delivering quality results efficiently. With the expertise and experience within our team, we are fully equipped to manage projects independently from planning and development to successful delivery, without relying on external teams or third-party resources.",
+  },
+  {
+    question: "What is your payment procedure?",
+    answer:
+      "We follow a transparent, phase-wise payment structure that aligns payments with project progress and milestones. Project Initiation: 30% of the total project fee is collected during the initial phase as we begin the project. Backend & Security Completion: Once the backend development and security implementation are successfully completed, the next agreed portion of the project fee is collected. Deployment & Handover: The remaining balance is collected during the final phase, upon deployment and successful project handover. This milestone-based payment process ensures transparency for both parties and keeps the payment schedule aligned with the actual progress of the project.",
   },
 ];
 
