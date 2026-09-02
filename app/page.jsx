@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
 import LazySection from "@/components/ui/LazySection";
-import HoneyBee from "@/components/ui/HoneyBee";
 import Navbar from "@/components/home/Navbar";
 import Hero from "@/components/home/Hero";
 import About from "@/components/home/About";
@@ -56,7 +55,6 @@ export default async function Home() {
 
   return (
     <main>
-      <HoneyBee />
       <Navbar initialSettings={data.settings} />
       <Hero />
       <About />

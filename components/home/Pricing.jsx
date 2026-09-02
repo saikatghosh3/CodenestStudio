@@ -83,15 +83,6 @@ const revealVariants = {
 export default function Pricing({ initialPricing = [] }) {
   const initialActive = initialPricing.filter((p) => p.isActive !== false);
   const [packages, setPackages] = useState(initialActive.length > 0 ? initialActive : DEFAULT_PLANS);
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const update = () => setIsDesktop(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
 
   useEffect(() => {
     async function fetchPricing() {
@@ -110,7 +101,7 @@ export default function Pricing({ initialPricing = [] }) {
   }, []);
 
   return (
-    <section id="pricing" className="py-24 lg:py-32 relative bg-background overflow-hidden">
+    <section id="pricing" className="py-16 lg:py-24 relative bg-background overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/5 via-background to-background pointer-events-none" />
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px] pointer-events-none" />
 
@@ -120,7 +111,7 @@ export default function Pricing({ initialPricing = [] }) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-20"
+          className="text-center mb-12"
         >
           <span className="inline-block text-sm font-semibold text-primary uppercase tracking-widest bg-primary/10 border border-primary/20 px-4 py-1.5 rounded-full mb-6">
             Investment
@@ -133,52 +124,51 @@ export default function Pricing({ initialPricing = [] }) {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8 items-center max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 items-start max-w-5xl mx-auto">
           {packages.map((pkg, idx) => {
-            const isLeft = idx === 0;
-            const isRight = idx === 2;
+            const isPopular = pkg.popular;
             return (
             <motion.div
               key={pkg._id || idx}
               custom={{
-                x: isDesktop ? (isLeft ? -170 : isRight ? 170 : 0) : 0,
-                rotate: isDesktop ? (isLeft ? -7 : isRight ? 7 : 0) : 0,
+                x: 0,
+                rotate: 0,
                 delay: idx === 1 ? 0.15 : 0,
               }}
               variants={revealVariants}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.25 }}
-              className={`relative flex flex-col p-6 sm:p-8 rounded-2xl lg:rounded-[2.5rem] border ${
-                pkg.popular 
-                  ? "border-primary bg-gradient-to-b from-primary/10 to-transparent lg:-mt-8 lg:mb-8 shadow-2xl shadow-primary/20" 
-                  : "border-border bg-card"
-              } backdrop-blur-xl group hover-target`}
+              className={`relative flex flex-col rounded-2xl border ${
+                isPopular
+                  ? "border-primary bg-gradient-to-b from-primary/10 to-transparent shadow-2xl shadow-primary/20 md:-mt-4 md:mb-4 p-6 sm:p-8"
+                  : "border-border bg-card p-5 sm:p-6"
+              } backdrop-blur-xl group hover-target transition-all duration-300`}
             >
               {pkg.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-4 py-1.5 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider rounded-full shadow-lg">
-                  <Sparkles className="h-3.5 w-3.5" />
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-4 py-1.5 bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-full shadow-lg">
+                  <Sparkles className="h-3 w-3" />
                   Most Popular
                 </div>
               )}
 
-              <div className="mb-8">
-                <h3 className="text-2xl font-bold text-foreground mb-2">{pkg.name}</h3>
-                <p className="text-sm text-muted-foreground">{pkg.subtitle}</p>
+              <div className={isPopular ? "mb-6" : "mb-4"}>
+                <h3 className={`${isPopular ? "text-xl sm:text-2xl" : "text-lg sm:text-xl"} font-bold text-foreground mb-1`}>{pkg.name}</h3>
+                <p className="text-xs text-muted-foreground">{pkg.subtitle}</p>
               </div>
 
-              <div className="mb-8 pb-8 border-b border-border">
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-3xl sm:text-5xl font-extrabold text-foreground tracking-tight">
+              <div className={`${isPopular ? "mb-6 pb-6" : "mb-4 pb-4"} border-b border-border`}>
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className={`${isPopular ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl"} font-extrabold text-foreground tracking-tight`}>
                     {pkg.price}
                   </span>
                 </div>
-                <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
                   {pkg.period}
                 </p>
               </div>
 
-              <ul className="space-y-4 mb-10 flex-1">
+              <ul className={`space-y-2.5 ${isPopular ? "mb-7" : "mb-5"} flex-1`}>
                 {pkg.features.map((feature, fIdx) => (
                   <li key={fIdx} className="flex items-start gap-3 text-sm text-muted-foreground">
                     <span className={`p-1 rounded-full shrink-0 mt-0.5 ${pkg.popular ? "bg-primary/20 text-primary" : "bg-card text-foreground"}`}>

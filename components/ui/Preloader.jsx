@@ -5,20 +5,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Code2 } from "lucide-react";
 
 export default function Preloader() {
-  const [show, setShow] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [show, setShow] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const alreadySeen = window.sessionStorage.getItem("cns_preloaded") === "1";
-    if (alreadySeen) return;
-    window.sessionStorage.setItem("cns_preloaded", "1");
-    setShow(true);
+    setMounted(true);
     document.body.style.overflow = "hidden";
-    const timer = setTimeout(() => {
+    const loadTimer = setTimeout(() => setLoading(false), 2200);
+    const hideTimer = setTimeout(() => {
       setShow(false);
       document.body.style.overflow = "";
-    }, 700);
+    }, 3000);
     return () => {
-      clearTimeout(timer);
+      clearTimeout(loadTimer);
+      clearTimeout(hideTimer);
       document.body.style.overflow = "";
     };
   }, []);
@@ -27,7 +28,7 @@ export default function Preloader() {
 
   return (
     <AnimatePresence>
-      {show && (
+      {mounted && show && (
         <motion.div
           exit={{ opacity: 0, y: "-100%" }}
           transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
@@ -61,7 +62,7 @@ export default function Preloader() {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{
                     duration: 0.6,
-                    delay: 0.25 + i * 0.05,
+                    delay: 0.15 + i * 0.04,
                     ease: [0.22, 1, 0.36, 1],
                   }}
                   className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight ${
@@ -75,24 +76,20 @@ export default function Preloader() {
               ))}
             </div>
 
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-              className="mt-5 h-1 w-44 sm:w-56 rounded-full bg-primary/15 overflow-hidden"
-            >
+            <motion.div className="mt-5 h-1 w-44 sm:w-56 rounded-full bg-primary/15 overflow-hidden">
               <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: "0%" }}
-                transition={{ duration: 0.9, delay: 0.6, ease: "easeInOut" }}
-                className="h-full w-1/2 rounded-full bg-gradient-to-r from-primary to-accent"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: loading ? 0.15 : 1 }}
+                transition={{ duration: 2.2, ease: "easeInOut" }}
+                style={{ transformOrigin: "left" }}
+                className="h-full w-full rounded-full bg-gradient-to-r from-primary to-accent"
               />
             </motion.div>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.9 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
               className="mt-6 text-xs sm:text-sm text-muted-foreground uppercase tracking-[0.3em]"
             >
               Crafting Premium Web Experiences

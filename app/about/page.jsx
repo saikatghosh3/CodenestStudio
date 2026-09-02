@@ -82,10 +82,12 @@ export default function AboutPage() {
       <Navbar initialSettings={settings} />
 
       {/* Hero Section */}
-      <section className="pt-28 pb-10 sm:pt-32 sm:pb-14 lg:pt-40 lg:pb-16 relative overflow-hidden">
+      <section className="pt-24 pb-8 sm:pt-28 sm:pb-10 lg:pt-36 lg:pb-12 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] bg-primary/5 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 left-0 w-[200px] h-[200px] sm:w-[400px] sm:h-[400px] bg-purple-500/5 rounded-full blur-[120px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/8 via-background to-background" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[150px]" />
+          <div className="absolute top-0 right-0 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-purple-500/5 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 left-0 w-[200px] h-[200px] sm:w-[400px] sm:h-[400px] bg-blue-500/5 rounded-full blur-[120px]" />
           <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.03] dark:opacity-[0.06] [mask-image:linear-gradient(180deg,black,transparent)]" />
         </div>
 
@@ -100,21 +102,21 @@ export default function AboutPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-border bg-card mb-5 sm:mb-7 backdrop-blur-sm shadow-sm"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/80 backdrop-blur-sm shadow-sm mb-4"
             >
-              <span className="relative flex h-2 w-2">
+              <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
               </span>
-              <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
-              <span className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-widest">Who We Are</span>
+              <Building2 className="w-3 h-3 text-primary" />
+              <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-widest">Who We Are</span>
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground tracking-tight mb-5 sm:mb-7 text-balance"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight mb-3 sm:mb-4 text-balance"
             >
               About{"\u00A0"}
               <span className="bg-gradient-to-r from-primary via-blue-500 to-accent bg-clip-text text-transparent">
@@ -127,7 +129,7 @@ export default function AboutPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
+                className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed"
               >
                 {companyInfo.description}
               </motion.p>
@@ -137,21 +139,21 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-4 text-center"
+              className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-10 gap-y-3 text-center"
             >
               <div>
-                <p className="text-2xl sm:text-3xl font-bold text-foreground bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">100%</p>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Client Focus</p>
+                <p className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">100%</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">Client Focus</p>
               </div>
-              <div className="w-px h-10 bg-border hidden sm:block" />
+              <div className="w-px h-8 bg-border hidden sm:block" />
               <div>
-                <p className="text-2xl sm:text-3xl font-bold text-foreground bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">End-to-End</p>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Development</p>
+                <p className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">End-to-End</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">Development</p>
               </div>
-              <div className="w-px h-10 bg-border hidden sm:block" />
+              <div className="w-px h-8 bg-border hidden sm:block" />
               <div>
-                <p className="text-2xl sm:text-3xl font-bold text-foreground bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Scalable</p>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Web Solutions</p>
+                <p className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Scalable</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">Web Solutions</p>
               </div>
             </motion.div>
           </motion.div>
