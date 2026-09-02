@@ -179,13 +179,23 @@ export default function Hero() {
       </div>
 
       <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-muted border-y border-border py-4 z-10 backdrop-blur-md transition-colors duration-300">
-        <div className="flex items-center whitespace-nowrap gap-16 pr-16 w-fit animate-marquee">
-          {[...LOGOS, ...LOGOS].map((logo, idx) => (
-            <div key={idx} className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors cursor-default">
-              {logo.icon}
-              <span className="text-lg font-semibold tracking-wider">{logo.name}</span>
-            </div>
-          ))}
+        <div className="flex w-full">
+          <div className="flex shrink-0 items-center whitespace-nowrap gap-16 animate-marquee">
+            {[...LOGOS, ...LOGOS].map((logo, idx) => (
+              <div key={idx} className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors cursor-default">
+                {logo.icon}
+                <span className="text-lg font-semibold tracking-wider">{logo.name}</span>
+              </div>
+            ))}
+          </div>
+          <div className="flex shrink-0 items-center whitespace-nowrap gap-16 animate-marquee" aria-hidden>
+            {[...LOGOS, ...LOGOS].map((logo, idx) => (
+              <div key={idx} className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors cursor-default">
+                {logo.icon}
+                <span className="text-lg font-semibold tracking-wider">{logo.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
