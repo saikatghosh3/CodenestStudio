@@ -58,38 +58,38 @@ export default function TechStack() {
         >
           <div
             ref={containerRef}
-            className="relative w-full max-w-[550px] overflow-hidden rounded-2xl border border-border bg-muted/30 backdrop-blur-sm p-6 sm:p-10 shadow-xl transition-colors duration-300"
+            className="relative w-full max-w-[550px] overflow-hidden rounded-2xl border border-border bg-muted/30 backdrop-blur-sm p-4 sm:p-6 md:p-10 shadow-xl transition-colors duration-300"
           >
-            <div className="flex w-full flex-col items-stretch justify-between gap-8 sm:gap-10">
+            <div className="flex w-full flex-col items-stretch justify-between gap-6 sm:gap-8 md:gap-10">
               <div className="flex flex-row items-center justify-between">
-                <Circle ref={r1c1} className="h-10 w-10 sm:h-12 sm:w-12">
-                  <TechIcon icon={SiTypescript} className="text-[#3178C6] w-5 h-5 sm:w-6 sm:h-6" />
+                <Circle ref={r1c1} className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12">
+                  <TechIcon icon={SiTypescript} className="text-[#3178C6] w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </Circle>
-                <Circle ref={r1c2} className="h-10 w-10 sm:h-12 sm:w-12">
-                  <TechIcon icon={SiTailwindcss} className="text-[#38BDF8] w-5 h-5 sm:w-6 sm:h-6" />
+                <Circle ref={r1c2} className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12">
+                  <TechIcon icon={SiTailwindcss} className="text-[#38BDF8] w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </Circle>
               </div>
 
               <div className="flex flex-row items-center justify-between">
-                <Circle ref={r2c1} className="h-10 w-10 sm:h-12 sm:w-12">
-                  <TechIcon icon={SiFramer} className="text-[#05F] w-5 h-5 sm:w-6 sm:h-6" />
+                <Circle ref={r2c1} className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12">
+                  <TechIcon icon={SiFramer} className="text-[#05F] w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </Circle>
-                <Circle ref={center} className="h-20 w-24 sm:h-24 sm:w-32 border-primary/40 shadow-primary/20">
+                <Circle ref={center} className="h-16 w-20 sm:h-20 sm:w-28 md:h-24 md:w-32 border-primary/40 shadow-primary/20">
                   <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-[9px] sm:text-[11px] font-bold text-primary tracking-tight leading-none text-center">codenest<br/>studio</span>
+                    <span className="text-[8px] sm:text-[10px] md:text-[11px] font-bold text-primary tracking-tight leading-none text-center">codenest<br/>studio</span>
                   </div>
                 </Circle>
-                <Circle ref={r2c3} className="h-10 w-10 sm:h-12 sm:w-12">
-                  <TechIcon icon={SiJavascript} className="text-[#F7DF1E] w-5 h-5 sm:w-6 sm:h-6" />
+                <Circle ref={r2c3} className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12">
+                  <TechIcon icon={SiJavascript} className="text-[#F7DF1E] w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </Circle>
               </div>
 
               <div className="flex flex-row items-center justify-between">
-                <Circle ref={r3c1} className="h-10 w-10 sm:h-12 sm:w-12">
-                  <TechIcon icon={SiNextdotjs} className="text-foreground w-5 h-5 sm:w-6 sm:h-6" />
+                <Circle ref={r3c1} className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12">
+                  <TechIcon icon={SiNextdotjs} className="text-foreground w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </Circle>
-                <Circle ref={r3c2} className="h-10 w-10 sm:h-12 sm:w-12">
-                  <TechIcon icon={SiReact} className="text-[#61DAFB] w-5 h-5 sm:w-6 sm:h-6" />
+                <Circle ref={r3c2} className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12">
+                  <TechIcon icon={SiReact} className="text-[#61DAFB] w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </Circle>
               </div>
             </div>

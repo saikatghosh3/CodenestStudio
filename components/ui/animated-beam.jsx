@@ -10,7 +10,7 @@ const Circle = React.forwardRef(({ className, children, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      'relative z-10 flex items-center justify-center rounded-full border-2 border-border bg-background shadow-lg transition-colors duration-300',
+      'relative z-10 flex items-center justify-center overflow-hidden rounded-full border-2 border-border bg-background shadow-lg transition-colors duration-300',
       className
     )}
     {...props}
